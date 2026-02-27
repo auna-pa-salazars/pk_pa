@@ -30,7 +30,8 @@ erroresExel <- function(frame,vars_select){
     comentarios %>% 
       arrange(fila) %>% 
       unique() %>%
-      mutate(coment=paste0("error formula excel en campo(s) ", paste0(campo,collapse = ", ")))
+      group_by(fila) %>% 
+      mutate(coment=paste0("error formula excel en campo(s) ", paste0(unique(campo),collapse = ", ")))
     
   }else{
     NULL
@@ -80,3 +81,4 @@ faltaInformacion <- function(frame,selecColumnas=c()){
   }
 
 }
+
