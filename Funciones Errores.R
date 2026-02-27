@@ -1,7 +1,10 @@
 
 
 erroresExel <- function(frame,vars_select){
-  errores<-c("#N/A","#N/D","#¡DIV/0!", "#¡VALOR!", "#VALUE!", "#¡REF!", "#¡NUM!", "#¿NOMBRE?", "#¡NULO!","**")
+  errores<-c( '#DIV/0!','#N/A','#NAME?','#NULL!','#NUM!','#REF!','#VALUE!','#SPILL!',
+       '#CALC!','#FIELD!','#BLOCKED!','#ERROR!','#¡DIV/0!','#¿NOMBRE?','#¡NULO!',
+        '#¡NÚM!','#¡REF!','#¡VALOR!','#¡DESBORDAMIENTO!','#¡CALC!',
+        '#¡CAMPO!','#¡BLOQUEADO!','#N/D','#¡NUM!','#NAME','**')
   vecColumnas<-apply(ungroup(frame), 2, function(col){
     colChar<-str_squish(toupper(as.character(col)))
     if(any(errores %in% colChar)){
@@ -80,6 +83,7 @@ faltaInformacion <- function(frame,selecColumnas=c()){
   }
 
 }
+
 
 
 
