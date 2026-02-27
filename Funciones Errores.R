@@ -40,7 +40,7 @@ erroresExel <- function(frame,vars_select){
 
 faltaInformacion <- function(frame,selecColumnas=c()){
   
-  vecColumnas<-apply(ungroup(frame) %>% dplyr::select(any_of(selecColumnas)),
+  vecColumnas<-apply(ungroup(frame),
                      2,
                      function(col){
                        colChar<-str_squish(toupper(as.character(col)))
@@ -64,7 +64,7 @@ faltaInformacion <- function(frame,selecColumnas=c()){
         mutate(campo=gsub("[0-9]","",campo)) %>% 
         mutate(fila=row_number()+1) %>%
         filter(row_number()==vecColumnas[i]) %>%
-        dplyr::select(fila,numero_de_personal,apellidos_y_nombres,campo)
+        dplyr::select(fila,c(selecColumnas),campo)
       comentarios<-bind_rows(list(comentarios,iter))
     }
     
@@ -72,13 +72,12 @@ faltaInformacion <- function(frame,selecColumnas=c()){
       arrange(fila) %>% 
       unique() %>%
       group_by(fila) %>% 
-      summarise(numero_de_personal=unique(numero_de_personal)[1],
-                apellidos_y_nombres=unique(apellidos_y_nombres)[1],
-                coment=paste0("Falta informacion en ", paste0(campo,collapse = ", "))
+      mutate(coment=paste0("Falta informacion en ", paste0(unique(campo),collapse = ", ")))
       )
   }else{
     NULL
   }
 
 }
+
 
