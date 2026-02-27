@@ -1,6 +1,6 @@
 
 
-erroresExel <- function(frame){
+erroresExel <- function(frame,vars_select){
   errores<-c("#N/A","#N/D","#¡DIV/0!", "#¡VALOR!", "#VALUE!", "#¡REF!", "#¡NUM!", "#¿NOMBRE?", "#¡NULO!","**")
   vecColumnas<-apply(ungroup(frame), 2, function(col){
     colChar<-str_squish(toupper(as.character(col)))
@@ -23,19 +23,15 @@ erroresExel <- function(frame){
         mutate(campo=gsub("[0-9]","",campo)) %>% 
         mutate(fila=row_number()+1) %>%
         filter(row_number()==vecColumnas[i]) %>%
-        dplyr::select(fila,identificacion,nombres_y_apellidos,empresa,campo)
+        dplyr::select(fila,c(vars_select),campo)
       comentarios<-bind_rows(list(comentarios,iter))
     }
     
     comentarios %>% 
       arrange(fila) %>% 
       unique() %>%
-      group_by(fila) %>% 
-      summarise(identificacion=unique(identificacion)[1],
-                nombres_y_apellidos=unique(nombres_y_apellidos)[1],
-                empresa=unique(empresa)[1],
-                coment=paste0("error formula excel en campo(s) ", paste0(campo,collapse = ", "))
-      )
+      mutate(coment=paste0("error formula excel en campo(s) ", paste0(campo,collapse = ", ")))
+    
   }else{
     NULL
   }
@@ -82,4 +78,5 @@ faltaInformacion <- function(frame,selecColumnas=c()){
   }else{
     NULL
   }
+
 }
