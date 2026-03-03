@@ -86,4 +86,18 @@ faltaInformacion <- function(frame,selecColumnas=c()){
 
 
 
+encontrarPatron <- function(frame,patron){
+  lista <- apply(frame,2,function(x){
+    min( min( which(grepl(patron,x,ignore.case = T)),na.rm=T),99999999,na.rm = T)
+  })
+  columnas<-names(lista)
+  
+  resFrame<-data.frame(columnas=columnas,
+                       fila=unname(lista)) %>% 
+    mutate(fila=as.numeric(fila)) %>% 
+    filter(fila < (nrow(frame)-10)) %>% 
+    arrange(fila)
+  
+ return(resFrame)
+}
 
